@@ -25,13 +25,13 @@ describe('wrap-iife', function () {
 
     it('should wrap without a source map', function () {
         var result = wrapIife(testFilePath, testContentsOriginal);
-        assert.equal(result.contents, '!(function() { ' + testContentsOriginal + '}());');
+        assert.equal(result.contents, '!(function() { ' + testContentsOriginal + '\n}());');
         assert.equal(result.sourceMap, undefined);
     });
 
     it('should wrap with a source map', function () {
         var result = wrapIife(testFilePath, testContentsOriginal, {sourceMaps: true});
-        assert.equal(result.contents, '!(function() { ' + testContentsOriginal + '}());');
+        assert.equal(result.contents, '!(function() { ' + testContentsOriginal + '\n}());');
         assert.deepEqual(result.sourceMap,
             {version:3, sources: ['a/relative/path'], names: [], mappings: 'eAAA;AACA;AACA'});
     });
@@ -45,7 +45,7 @@ describe('wrap-iife', function () {
         var result = wrapIife(testFilePath, testContentsIndented,
             {sourceMaps: true, inputSourceMap: JSON.parse(map.toString())});
 
-        assert.equal(result.contents, '!(function() { ' + testContentsIndented + '}());');
+        assert.equal(result.contents, '!(function() { ' + testContentsIndented + '\n}());');
         assert.deepEqual(result.sourceMap,
             {version:3, sources: ['a/relative/path'], names: [], mappings: 'AAAA,eAAA;AACA;AACA,IADA'});
     });

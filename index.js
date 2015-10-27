@@ -48,7 +48,11 @@ function wrapIife(filePath, contents, config) {
         newLineIndexOf = contents.indexOf('\n', newLineIndexOf + 1);
     }
 
-    var modifiedContents = iifeBegin + contents + iifeEnd;
+    var modifiedContents = inputSourceMap ? convertSourceMap.removeComments(contents) : contents;
+
+    var lastCharacter = modifiedContents[modifiedContents.length - 1];
+
+    modifiedContents = iifeBegin + modifiedContents + (lastCharacter !== '\n' ? '\n' : '') + iifeEnd;
 
     return {contents: modifiedContents, sourceMap: sourceMaps ? JSON.parse(map.toString()) : null};
 }
