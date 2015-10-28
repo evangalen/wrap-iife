@@ -22,7 +22,8 @@ function wrapIife(filePath, contents, config) {
     var iifeBegin = '!(function() { ';
     var iifeEnd = '}());';
 
-    var map = new SourceMapGenerator();
+    var map = inputSourceMap ? SourceMapGenerator.fromSourceMap(new SourceMapConsumer(inputSourceMap)) :
+            new SourceMapGenerator();
 
     var sourceRelativePath = path.relative(basePath, filePath);
 
@@ -52,8 +53,6 @@ function wrapIife(filePath, contents, config) {
     var lastCharacter = modifiedContents[modifiedContents.length - 1];
 
     modifiedContents = iifeBegin + modifiedContents + (lastCharacter !== '\n' ? '\n' : '') + iifeEnd;
-
-    map.applySourceMap(new SourceMapConsumer(inputSourceMap));
 
     return {contents: modifiedContents, sourceMap: sourceMaps ? JSON.parse(map.toString()) : null};
 }
