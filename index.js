@@ -27,6 +27,10 @@ function wrapIife(filePath, contents, config) {
 
     var sourceRelativePath = path.relative(basePath, filePath);
 
+    // add source map mapping for `iifeBegin` that will be pre-pended to the contents
+    map.addMapping({source: null, original: null, generated: {line: 1, column: 0}});
+
+    // add source map mapping for the original code of the first line
     map.addMapping({
         source: sourceRelativePath,
         original: {line: 1, column: 0},
