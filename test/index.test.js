@@ -33,7 +33,7 @@ describe('wrap-iife', function () {
         var result = wrapIife(testFilePath, testContentsOriginal, {sourceMaps: true});
         assert.equal(result.contents, '!(function() { ' + testContentsOriginal + '\n}());');
         assert.deepEqual(result.sourceMap,
-            {version:3, sources: ['a/relative/path'], names: [], mappings: 'eAAA;AACA;AACA'});
+            {version:3, sources: ['a/relative/path'], names: [], mappings: 'A,eAAA;AACA;AACA'});
     });
 
     it('should wrap with a source map and use existing source maps', function () {
@@ -47,7 +47,7 @@ describe('wrap-iife', function () {
 
         assert.equal(result.contents, '!(function() { ' + testContentsIndented + '\n}());');
         assert.deepEqual(result.sourceMap,
-            {version:3, sources: ['a/relative/path'], names: [], mappings: 'AAAA,eAAA;AACA;AACA,IADA'});
+            {version:3, sources: ['a/relative/path'], names: [], mappings: 'AAAA,A,eAAA;AACA;AACA,IADA'});
     });
 
 });
