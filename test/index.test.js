@@ -47,7 +47,7 @@ describe('wrap-iife', function () {
 
         assert.equal(result.contents, '!(function() { ' + testContentsIndented + '\n}());');
         assert.deepEqual(result.sourceMap,
-            {version:3, sources: ['a/relative/path'], names: [], mappings: 'AAAA,A,eAAA;AACA;AACA,IADA'});
+            {version:3, sources: ['a/relative/path'], names: [], mappings: 'AAAA;AACA;IAAA'});
     });
 
 });

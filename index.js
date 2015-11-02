@@ -22,8 +22,7 @@ function wrapIife(filePath, contents, config) {
     var iifeBegin = '!(function() { ';
     var iifeEnd = '}());';
 
-    var map = inputSourceMap ? SourceMapGenerator.fromSourceMap(new SourceMapConsumer(inputSourceMap)) :
-            new SourceMapGenerator();
+    var map = new SourceMapGenerator();
 
     var sourceRelativePath = path.relative(basePath, filePath);
 
@@ -52,13 +51,33 @@ function wrapIife(filePath, contents, config) {
         newLineIndexOf = contents.indexOf('\n', newLineIndexOf + 1);
     }
 
-    var modifiedContents = inputSourceMap ? convertSourceMap.removeComments(contents) : contents;
+    var lastCharacter = contents[contents.length - 1];
 
-    var lastCharacter = modifiedContents[modifiedContents.length - 1];
+    var modifiedContents = iifeBegin + contents + (lastCharacter !== '\n' ? '\n' : '') + iifeEnd;
 
-    modifiedContents = iifeBegin + modifiedContents + (lastCharacter !== '\n' ? '\n' : '') + iifeEnd;
+    var sourceMapJSON = null;
 
-    return {contents: modifiedContents, sourceMap: sourceMaps ? JSON.parse(map.toString()) : null};
+    if (sourceMaps) {
+        if (inputSourceMap) {
+            sourceMapJSON = mergeSourceMap(sourceRelativePath, inputSourceMap, map.toString())
+        } else {
+            sourceMapJSON = map.toString();
+        }
+    }
+
+    return {contents: modifiedContents, sourceMap: sourceMaps ? JSON.parse(sourceMapJSON) : null};
+
+
+    function mergeSourceMap(sourceRelativePath, inputSourceMap, sourceMapJSON) {
+        var generator = SourceMapGenerator.fromSourceMap(new SourceMapConsumer(inputSourceMap));
+
+        var sourceMap = JSON.parse(sourceMapJSON);
+        sourceMap.file = sourceRelativePath;
+
+        generator.applySourceMap(new SourceMapConsumer(sourceMap));
+
+        return generator.toString();
+    }
 }
 
 
